@@ -251,12 +251,22 @@ def analyze_text_complete(text: str) -> Dict[str, Any]:
     
     # Try OpenAI first, fallback to mock analyzer
     try:
+        print("🤖 Attempting to use OpenAI API...")
         llm_analyzer = LLMAnalyzer()
         llm_result = llm_analyzer.analyze_text(text)
         analysis_method = "openai"
-    except (ValueError, Exception) as e:
-        # Fallback to mock analyzer
-        print(f"OpenAI unavailable ({str(e)}), using mock analyzer")
+        print("✅ Successfully used OpenAI API for analysis")
+    except ValueError as e:
+        # API key not configured
+        print(f"⚠️  OpenAI API key not configured: {str(e)}")
+        print("🔄 Falling back to mock analyzer...")
+        llm_analyzer = MockAnalyzer()
+        llm_result = llm_analyzer.analyze_text(text)
+        analysis_method = "mock"
+    except Exception as e:
+        # Other errors (quota, network, etc.)
+        print(f"⚠️  OpenAI API error: {str(e)}")
+        print("🔄 Falling back to mock analyzer...")
         llm_analyzer = MockAnalyzer()
         llm_result = llm_analyzer.analyze_text(text)
         analysis_method = "mock"
