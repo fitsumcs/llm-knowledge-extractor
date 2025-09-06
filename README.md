@@ -190,7 +190,7 @@ Due to the 2-hour time constraint, I focused on core functionality over advanced
 ## Usage
 
 1. Start both backend and frontend servers
-2. Open `http://localhost:5173` in your browser
+2. Open `http://localhost:3000` in your browser
 3. Use the "Analyze Text" tab to submit text for analysis
 4. Use the "Search" tab to find specific analyses
 5. Use the "All Analyses" tab to view all stored analyses
