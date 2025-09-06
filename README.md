@@ -20,6 +20,38 @@ A full-stack application that uses OpenAI's GPT to analyze text and extract stru
 - **RESTful API**: Django REST Framework backend
 - **Comprehensive Testing**: Unit and integration tests included
 
+## 🤖 AI Analysis Modes
+
+The application supports two analysis modes with automatic fallback:
+
+### **OpenAI Mode (Primary)**
+- **When**: OpenAI API key is configured and has available credits
+- **Quality**: High-quality, context-aware analysis using GPT-3.5-turbo
+- **Features**: 
+  - Intelligent summarization
+  - Context-aware topic extraction
+  - Accurate sentiment analysis
+  - High confidence scores (0.8-1.0)
+- **Cost**: ~$0.001-0.01 per analysis (depending on text length)
+
+### **Mock Mode (Fallback)**
+- **When**: OpenAI API key is missing, invalid, or quota exceeded
+- **Quality**: Rule-based analysis using predefined patterns
+- **Features**:
+  - Pattern-based summarization
+  - Predefined topic categories
+  - Keyword-based sentiment analysis
+  - Moderate confidence scores (0.4-0.8)
+- **Cost**: Free (no API calls)
+- **Use Cases**: 
+  - Development and testing
+  - Demonstrations
+  - When OpenAI credits are exhausted
+  - Offline usage
+
+### **Automatic Fallback**
+The system automatically detects API issues and falls back to mock mode, ensuring the application always works. You'll see clear logging indicating which mode is being used.
+
 ## Tech Stack
 
 - **Backend**: Django 4.2, Django REST Framework, SQLite
@@ -55,7 +87,7 @@ llm-knowledge-extractor/
 ### Prerequisites
 
 - Docker and Docker Compose
-- OpenAI API key
+- OpenAI API key (optional - app works with fallback mode)
 
 ### Setup and Run
 
@@ -81,6 +113,19 @@ llm-knowledge-extractor/
    - **Frontend**: http://localhost:3000
    - **Backend API**: http://localhost:8000/api/
    - **API Documentation**: http://localhost:8000/api/docs/
+
+5. **Monitor the logs** (optional):
+   ```bash
+   # View backend logs to see which analysis mode is being used
+   docker compose logs backend -f
+   
+   # You'll see messages like:
+   # 🤖 Attempting to use OpenAI API...
+   # ✅ Successfully used OpenAI API for analysis
+   # OR
+   # ⚠️ OpenAI API error: quota exceeded
+   # 🔄 Falling back to mock analyzer...
+   ```
 
 ### Stop the application:
 ```bash
@@ -145,17 +190,39 @@ If you prefer to run without Docker:
 - `GET /api/list/` - List all analyses
 - `GET /api/{id}/` - Get specific analysis
 
-## Fallback Mode
+## 🔄 Fallback System
 
-The application includes an intelligent fallback system that works without an OpenAI API key:
+The application includes an intelligent fallback system that ensures it always works:
 
-- **Automatic Detection**: If OpenAI API key is missing or invalid, the system automatically switches to mock analysis
+- **Automatic Detection**: If OpenAI API key is missing, invalid, or quota exceeded, the system automatically switches to mock analysis
 - **Realistic Data**: Mock analyzer generates realistic summaries, titles, topics, and sentiment based on text content
 - **Keyword Extraction**: Real keyword extraction using NLTK (works regardless of API key)
 - **Confidence Scoring**: Adjusted confidence scores for mock analysis (capped at 0.8)
 - **Method Indication**: API responses include `analysis_method` field showing "openai" or "mock"
+- **Clear Logging**: Console shows which mode is being used with emoji indicators
 
 This allows you to test and demonstrate the application logic without requiring an OpenAI API key.
+
+## ⚖️ Tradeoffs & When to Use Each Mode
+
+### **Choose OpenAI Mode When:**
+- **Production use** - You need high-quality analysis
+- **Accuracy matters** - Context-aware insights are important
+- **Budget available** - You have OpenAI credits
+- **Real-world data** - Analyzing actual user content
+
+### **Choose Mock Mode When:**
+- **Development/Testing** - Building and testing features
+- **Demonstrations** - Showing the system to stakeholders
+- **Budget constraints** - No OpenAI credits available
+- **Offline usage** - Working without internet access
+- **Learning purposes** - Understanding the system architecture
+
+### **Hybrid Approach:**
+The automatic fallback system gives you the best of both worlds:
+- **Primary**: OpenAI for production quality
+- **Fallback**: Mock for reliability and cost control
+- **Transparent**: Clear indication of which mode is active
 
 ## API Documentation
 
