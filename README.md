@@ -37,7 +37,7 @@ llm-knowledge-extractor/
 │   ├── manage.py
 │   ├── requirements.txt
 │   ├── Dockerfile
-│   └── env.example
+│ 
 ├── frontend/               # React + Vite app
 │   ├── src/
 │   │   ├── components/     # React components
@@ -46,7 +46,7 @@ llm-knowledge-extractor/
 │   ├── Dockerfile
 │   └── nginx.conf
 ├── docker-compose.yml      # Docker orchestration
-├── docker.env.example      # Environment template
+├── env.example      # Environment template
 └── README.md
 ```
 
